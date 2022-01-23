@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html >
+<!--From https://codepen.io/frytyler/pen/EGdtg-->
+<head>
+  <meta charset="UTF-8">
+  <title>ML API</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">  
+</head>
+
+<body>
+ <div class="ocrform">
+	<h1>Nôm OCR</h1>
+    <p><img id="output" width="400" src="/static/save/last.jpg" onerror="this.style.display='none'"></p>
+    <p><label class="button1" for="file">Upload Image</label></p>
+
+    <script>
+    var loadFile = function(event) {
+      var image = document.getElementById('output');
+      image.src = URL.createObjectURL(event.target.files[0]);
+      image.style.display = 'block';
+    };
+    </script>
+    
+     <!-- Main Input For Receiving Query to our ML -->
+    <form action="/" method="POST" enctype=multipart/form-data>
+      <input type="file" accept="image/*" name="file" id="file" onchange="loadFile(event)" style="display: none;">
+      <button type="submit" class="button2">Process</button>
+    </form>
+
+    <script>
+      function copyFunction() {
+        /* Get the text field */
+        var copyText = document.getElementById("predictText");
+
+        /* Select the text field */
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+        /* Copy the text inside the text field */
+        navigator.clipboard.writeText(copyText.value);
+
+        var tooltip = document.getElementById("myTooltip");
+        tooltip.innerHTML = "Copied!";
+      }
+
+      function outFunc() {
+        var tooltip = document.getElementById("myTooltip");
+        tooltip.innerHTML = "Copy to clipboard";
+      }
+    </script>
+
+    <br>
+
+    <p><label>Text from the image:</label></p>
+    <div class="div_predict">
+      <textarea class="textarea_predict NomFont" name="predictText" id="predictText" cols="20" rows="5" readonly>{{ prediction_text }}</textarea>
+      <span class="tooltip">
+        <button class="button_predict" onclick="copyFunction()" onmouseout="outFunc()">
+          <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
+          <i class="material-icons">content_copy</i>
+        </button>
+      </span>
+    </div>
+
+ </div>
+
+
+</body>
+</html>
